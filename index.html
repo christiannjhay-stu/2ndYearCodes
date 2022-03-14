@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
+<script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
+
+
+<head>
+
+    <title>PAA5</title>
+    <style>
+        .content-table {
+            align-items: left;
+            min-width: 400px;
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header {
+            margin-top: -20px;
+            margin-left: -20px;
+            margin-right: -20px;
+            background: #3777E0;
+            color: #f1f1f1;
+            padding: 30px;
+            height: 80px;
+        }
+
+
+        th {
+            text-align: center;
+            align-items: center;
+            border-bottom: 1px solid #dddddd;
+            height: 40px;
+            padding: 2px;
+        }
+
+        td {
+
+            padding: 10px 80px;
+            align-items: center;
+            text-align: left;
+        }
+
+        .content-table tbody tr {
+            padding: 80px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+
+        }
+
+        .btn.btn-success {
+            position: absolute;
+            margin-left: 500px;
+            margin-top: 8px;
+        }
+
+        .btn.btn-danger {
+            position: absolute;
+            margin-left: 600px;
+            margin-top: 8px;
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            height: 500px;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #foodName {
+            position: absolute;
+            bottom: 0;
+
+        }
+
+        #myModal {
+            position: absolute;
+        }
+
+        #buttonclose {
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 13px;
+            margin-left: 75%;
+            background-color: #39393C;
+            color: white;
+        }
+    </style>
+</head>
+<div class="header" id="myHeader">
+    <h2>Preparatory Assessment #5
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;cejysugarol@addu.edu.ph
+
+    </h2>
+</div>
+
+<button type="button" id="loadd" class="btn btn-success" onclick="load(),database()">Load Data</button>
+<button type="button" class="btn btn-danger" onclick="hide()">Erase Data</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" id="mcontent">
+
+    </div>
+
+</div>
+
+<body>
+    <table class="content-table" align="center">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody id="tbodyy"></tbody>
+    </table>
+
+
+    <script src="data.js"></script>
+    <script>
+        const tbod = document.getElementById('tbodyy')
+        var i = 0;
+        var x = 0;
+        console.log(food)
+
+
+        function hide() {
+            i = 0;
+            x = 0;
+            let db = new Localbase('db')
+            document.getElementById("tbodyy").innerHTML = "";
+            db.collection('items').delete()
+            console.log('deleted')
+        }
+
+
+
+        function load() {
+
+            if (i < 1) {
+
+                for (user of food) {
+
+
+                    let newRow = tbodyy.insertRow()
+
+
+                    let fid = newRow.insertCell()
+                    fid.innerText = user.id
+
+                    let fname = newRow.insertCell()
+                    fname.innerText = user.name
+
+                    let fprice = newRow.insertCell()
+                    fprice.innerText = "₱" + user.price + ".00"
+
+                    //VIEW BUTTON
+                    let butt = document.createElement("button");
+
+                    butt.addEventListener("click", function (event) {
+                        var mcontent = document.getElementById("mcontent"); // content of modal
+                        var modal = document.getElementById("myModal"); // Get the modal
+                        modal.style.display = "block"; // When the user clicks the button, open the modal 
+
+
+                        // When the user clicks anywhere outside of the modal, close it
+                        window.onclick = function (event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+                        document.getElementById("mcontent").innerHTML = '<img src="' + food[this.id].image +
+                            '">' + food[this.id].name +
+                            "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;" + "₱" + food[
+                                this.id].price + ".00"
+
+
+                        let closebutton = document.createElement("button");
+                        mcontent.appendChild(closebutton);
+                        closebutton.id = "buttonclose";
+                        closebutton.innerHTML = "Close";
+
+                        closebutton.addEventListener("click", function (event) {
+                            modal.style.display = "none";
+                        })
+
+                        console.log(food[this.id].name)
+
+                    });
+                    butt.id = i;
+                    butt.innerHTML = "View";
+                    butt.style.backgroundColor = '#3977E0';
+                    butt.style.color = '#FFFFFF';
+                    newRow.appendChild(butt);
+                    document.getElementById('tbodyy').style.visibility = "visible";
+                    i++
+                }
+            }
+
+        }
+
+        function database() {
+            var x = 0;
+
+            if (x == 0) {
+                //database
+                let db = new Localbase('db')
+                db.collection('items').add({
+                    price: 350,
+                    name: "Baked salmon with fennel & tomatoes",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/1548772327.jpg",
+                    id: "1"
+                })
+                db.collection('items').add({
+                    price: 250,
+                    name: "Cajun spiced fish tacos",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/uvuyxu1503067369.jpg",
+                    id: "2"
+                })
+                db.collection('items').add({
+                    price: 300,
+                    name: "Escovitch Fish",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/1520084413.jpg",
+                    id: "3"
+                })
+                db.collection('items').add({
+                    price: 380,
+                    name: "Fish fofos",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/a15wsa1614349126.jpg",
+                    id: "4"
+                })
+                db.collection('items').add({
+                    price: 190,
+                    name: "Fish pie",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/ysxwuq1487323065.jpg",
+                    id: "5"
+                })
+                db.collection('items').add({
+                    price: 190,
+                    name: "Fish Stew with Rouille",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/vptqpw1511798500.jpg",
+                    id: "6"
+                })
+                db.collection('items').add({
+                    price: 220,
+                    name: "Garides Saganaki",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/wuvryu1468232995.jpg",
+                    id: "7"
+                })
+                db.collection('items').add({
+                    price: 350,
+                    name: "Grilled Portuguese sardines",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/lpd4wy1614347943.jpg",
+                    id: "8"
+                })
+                db.collection('items').add({
+                    price: 680,
+                    name: "Honey Teriyaki Salmon",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/xxyupu1468262513.jpg",
+                    id: "9"
+                })
+                db.collection('items').add({
+                    price: 500,
+                    name: "Kedgeree",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/utxqpt1511639216.jpg",
+                    id: "10"
+                })
+                db.collection('items').add({
+                    price: 420,
+                    name: "Kung Po Prawns",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/1525873040.jpg",
+                    id: "11"
+                })
+                db.collection('items').add({
+                    price: 390,
+                    name: "Laksa King Prawn Noodles",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/rvypwy1503069308.jpg",
+                    id: "12"
+                })
+                db.collection('items').add({
+                    price: 360,
+                    name: "Mediterranean Pasta Salad",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/wvqpwt1468339226.jpg",
+                    id: "13"
+                })
+                db.collection('items').add({
+                    price: 375,
+                    name: "Mee goreng mamak",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/xquakq1619787532.jpg",
+                    id: "14"
+                })
+                db.collection('items').add({
+                    price: 375,
+                    name: "Nasi lemak",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/wai9bw1619788844.jpg",
+                    id: "15"
+                })
+                db.collection('items').add({
+                    price: 360,
+                    name: "Portuguese fish stew (Caldeirada de peixe)",
+                    image: "https:\/\/www.themealdb.com\/images\/media\/meals\/do7zps1614349775.jpg",
+                    id: "16"
+                })
+
+
+                x++;
+            }
+
+
+
+        }
+    </script>
+</body>
+
+</html>
